@@ -1,0 +1,99 @@
+{% assign products_per_page = settings.products_per_row | times: settings.number_of_rows %}
+{% assign numbers = 'zero, one, two, three, four, five, six' | split: ',' %}
+{% assign products_per_row = settings.products_per_row | times: 1 %}
+{% assign products_per_row = numbers[products_per_row] | strip | append: '-per-row' %}
+
+<div class="main-content">
+  
+  {% if collection.description.size > 0 %}
+  <div class="rte clearfix">
+    {{ collection.description }}
+  </div>
+  {% endif %}
+  {% if current_tags %}
+  
+  {% paginate collection.products by products_per_page %}
+
+    <div class="list-tags">
+      {% for tag in current_tags %}
+      <div class="title-tag">
+        {{ tag | link_to_tag: tag }}  
+      </div>
+      <div class="list-products">
+        {% for product in collection.products %}
+            <a href="{{ product.url | within: collection }}">
+                <img src="{{ product | img_url: 'large' }}"/>
+            </a>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
+  {% if paginate.pages > 1 %}
+  <div class="pagination centered">
+    {{ paginate | default_pagination }}
+  </div>
+  {% endif %}
+
+  {% endpaginate %}
+
+  {% else %}
+
+    {% if collection.all_tags.size > 0 %}
+    <div class="list-tags">
+      {% for tag in collection.all_tags %}
+      <div class="title-tag">
+        {{ tag | link_to_tag: tag }}  
+      </div>
+      <div class="list-products">
+      {% assign count = 0 %}
+        {% for product in collection.products %}
+          {% if count == 3 %}
+          {% break %}
+          {% endif %}
+          {% if product.tags contains tag %}
+            {% assign count = count | plus: 1 %}
+            <a href="{{ product.url | within: collection }}">
+                <img src="{{ product | img_url: 'large' }}"/>
+            </a>
+          {% endif %}  
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  {% endif %}
+
+</div>
+
+<div class="side-bar">
+  <div class="section-collections">
+    <ul class="grid clearfix">
+    {% for link in linklists.all-collections.links %}
+    {% assign collection = link.object %}
+      
+      <li>
+        <div class="home-collections">
+          <a href="{{ collection.url }}">
+            {% if collection.image %}
+              <img src="{{ collection | img_url: 'large' }}" />
+            {% else %}
+              <img src="{{ collection.products.first | img_url: 'small' }}" />
+            {% endif %}
+            <span>{{ collection.title }}</span>
+          </a>
+        </div>  
+      </li>
+    {% endfor %}
+    <li>
+      <div class="home-collections">
+        <a href="/collections">
+          <img src="https://cdn.shopify.com/s/files/1/1467/2096/files/col-more-flip.jpg?13351731780223432643" />
+          <span>More</span>
+        </a>
+      </div>
+    </li>
+    </ul>
+  </div>
+</div>

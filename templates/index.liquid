@@ -1,0 +1,37 @@
+
+{% unless settings.homepage_page == blank or pages[settings.homepage_page].empty? %}
+{% assign page = pages[settings.homepage_page] %}
+<div class="rte grid-margins home-content">
+  {{ page.content }}
+</div>
+<div class="grey-bar"></div>
+{% endunless %}
+
+<div class="section-collections">
+  <ul class="grid clearfix">
+  {% for link in linklists.all-collections.links %}
+  {% assign collection = link.object %}
+    
+    <li>
+      <a href="{{ collection.url }}">
+        <div class="home-collections">
+          <span>{{ collection.title }}</span>
+          {% if collection.image %}
+            <img src="{{ collection | img_url: 'large' }}" />
+          {% else %}
+            <img src="{{ collection.products.first | img_url: 'small' }}" />
+          {% endif %}
+        </div>  
+      </a>
+    </li>
+  {% endfor %}
+  <li>
+    <a href="/collections">
+      <div class="home-collections">
+        <span>More</span>
+        <img src="https://cdn.shopify.com/s/files/1/1467/2096/files/col-more.jpg?6332946176091943211" />
+      </div>
+    </a>
+  </li>
+  </ul>
+</div>
