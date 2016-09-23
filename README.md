@@ -1,2 +1,1 @@
-Meridianandme (ver 1.0) theme
-
+Shopify Responsive Theme v1.0
